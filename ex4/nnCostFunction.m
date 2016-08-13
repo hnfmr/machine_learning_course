@@ -62,30 +62,63 @@ Theta2_grad = zeros(size(Theta2));
 %               and Theta2_grad from Part 2.
 %
 
+X = [ones(m, 1) X];
 
+a1 = X;
 
+z2 = a1*Theta1';
+a2 = sigmoid(z2);
+a2 = [ones(m, 1) a2];
 
+z3 = a2*Theta2';
+a3 = sigmoid(z3);
 
+yy = zeros(m, num_labels);
 
+yy = eye(num_labels)(y,:);
 
+t1 = Theta1(:, 2:end);
+t2 = Theta2(:, 2:end);
 
-
-
-
-
-
-
-
-
-
+J = sum( sum( -yy.*log(a3) - (1-yy).*log(1-a3) ) )/m + lambda*(sum(sum(t1.*t1)) + sum(sum(t2.*t2)))/2/m;
 
 
 % -------------------------------------------------------------
+% 5000x10
+d3 = a3 - yy;
+
+% 5000x26
+d2 = (d3*Theta2(:,2:end)).*sigmoidGradient(a1*Theta1');
+
+% 5000x25
+%d2=d2(:,2:end);
+
+% big Delta -> S
+% 25x401
+S1 = zeros(hidden_layer_size, (input_layer_size+1));
+% 10x26
+S2 = zeros(num_labels, (hidden_layer_size + 1));
+
+for t = 1:m
+  S1 = S1 + d2(t,:)'*a1(t,:);
+  S2 = S2 + d3(t,:)'*a2(t,:);
+end
+
+% 25x401
+D1 = zeros(hidden_layer_size, (input_layer_size+1));
+% 10x26
+D2 = zeros(num_labels, (hidden_layer_size + 1));
+
+D1 = S1/m .+ lambda*Theta1/m;
+D1(:,1) = S1(:,1)/m;
+D2 = S2/m .+ lambda*Theta2/m;
+D2(:,1) = S2(:,1)/m;
 
 % =========================================================================
 
 % Unroll gradients
-grad = [Theta1_grad(:) ; Theta2_grad(:)];
+%grad = [Theta1_grad(:) ; Theta2_grad(:)];
+grad = [D1(:) ; D2(:)];
 
 
 end
