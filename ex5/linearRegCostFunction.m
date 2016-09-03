@@ -20,9 +20,14 @@ grad = zeros(size(theta));
 %
 
 
+h = X*theta;
+t = theta;
+t(1) = 0;
 
+J = (h-y)'*(h-y)/2/m + lambda * (t'*t)/2/m;
 
-
+grad = X'*(h-y)/m + lambda*theta/m;
+grad(1) = X(:,1)'*(h-y)/m;
 
 
 
