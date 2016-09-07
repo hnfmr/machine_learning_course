@@ -48,7 +48,16 @@ x = zeros(n, 1);
 %
 %
 
-
+for i = 1:n
+  present = false;
+  for idx = 1:length(word_indices)
+    if word_indices(idx) == i
+      present = true;
+      break;
+    end
+  end
+  x(i) = present;
+end
 
 
 
