@@ -22,7 +22,17 @@ idx = zeros(size(X,1), 1);
 %
 
 
-
+for i = 1:size(X,1)
+  distortion = Inf;
+  for j = 1:K
+    d = X(i,:)-centroids(j,:);
+    dist_new = d*d';
+    if dist_new < distortion
+      distortion = dist_new;
+      idx(i) = j;
+    end
+  end
+end
 
 
 
