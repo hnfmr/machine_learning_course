@@ -28,16 +28,12 @@ centroids = zeros(K, n);
 
 for k = 1:K
   s = zeros(1, n);
-  c = 0;
-  for i = 1:X
+  for i = 1:m
     if idx(i) == k
       s = s + X(i,:);
-      c = c + 1;
     end
   end
-  if c > 0
-    centroids(k,:) = s/c;
-  end
+  centroids(k,:) = s/sum(idx==k);
 end
 
 
